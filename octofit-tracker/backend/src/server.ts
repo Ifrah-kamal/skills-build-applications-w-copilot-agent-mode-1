@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { getApiBaseUrl } from './config/api';
 import activitiesRouter from './routes/activities';
 import leaderboardRouter from './routes/leaderboard';
 import teamsRouter from './routes/teams';
@@ -10,6 +9,10 @@ import workoutsRouter from './routes/workouts';
 const app = express();
 const port = Number(process.env.PORT) || 8000;
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
+const codespaceName = process.env.CODESPACE_NAME;
+const apiBaseUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : 'http://localhost:8000';
 
 app.use(express.json());
 
@@ -17,7 +20,7 @@ app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
     message: 'OctoFit Tracker API is running',
-    apiBaseUrl: getApiBaseUrl(),
+    apiBaseUrl,
   });
 });
 
